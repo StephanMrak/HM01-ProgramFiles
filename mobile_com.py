@@ -5,25 +5,40 @@ import pygame
 import os
 import hmsysteme
 
-width = 1000
+width = 800
 height = 650
+abt=[]
 
-def start_game(gamefile):
+def start_game(gamefile, abt):
     mod_game=(__import__(gamefile))
     print(mod_game)
     p = multiprocessing.Process(target=mod_game.main)
     print(p)
     p.start()
     time.sleep(1)
+    a=hmsysteme.get_button_names()
+    for i in range(0, len(abt)):
+        if i <len(a):
+            abt[i].set_text(a[i])
+            abt[i].set_enabled(True)
+        else:
+            abt[i].set_text("no function")
+            abt[i].set_enabled(False)
+    #time.sleep(1)
     return p
     
-def close_game(asd):
+def close_game(asd, abt):
     for i in range(0,len(asd)):
         if asd[i].is_alive():           
             hmsysteme.close_pygame()
             time.sleep(0.5)
             asd[i].terminate()
             print(asd[i])
+    for i in range(0, len(abt)):
+        abt[i].set_text("no function")
+        abt[i].set_enabled(False)
+
+
   
 
 def mobile_com(threadname,path2,qgn,q1,q2,q3,q4,q5,size,gamefiles,hwqueue):
@@ -90,6 +105,7 @@ def mobile_com(threadname,path2,qgn,q1,q2,q3,q4,q5,size,gamefiles,hwqueue):
            
         def main(self):
             bt=[]
+            global abt
             functions=[]
             global width
             global height
@@ -134,11 +150,24 @@ def mobile_com(threadname,path2,qgn,q1,q2,q3,q4,q5,size,gamefiles,hwqueue):
             #self.image_widget = PILImageViewverWidget(width=width, height=height)
             self.image_widget = PILImageViewverWidget(width=width)
             self.image_widget.load(file_path_name=os.path.join(path2,"logo.jpg"))
+
+            for i in range(0,9):
+                def f(widget, i=i):
+                    hmsysteme.put_action(i+1)
+                    print("action button "+str(i+1)+" pressed")
+                name="no function"
+                action_button=gui.Button(name, width='30%', height='5%', margin='5px', style={'font-size': '20px', 'text-align': 'center'})
+                action_button.style["background"] = "#606060"
+                action_button.style["box-shadow"] = "none"
+                abt.append(action_button)
+                #container.append(action_button)
+                action_button.onclick.do(f)
+                action_button.set_enabled(False)
             
             for i in range(len(gamefiles)):
                 def f(widget,i=i):
-                    close_game(asdf)
-                    asdf.append(start_game(gamefiles[i]))
+                    close_game(asdf, abt)
+                    asdf.append(start_game(gamefiles[i], abt))
                     self.lbl.set_text(gamefiles[i]+" now runnning")
                     #print(asdf)
                 functions.append(f)       
@@ -151,6 +180,7 @@ def mobile_com(threadname,path2,qgn,q1,q2,q3,q4,q5,size,gamefiles,hwqueue):
             b2.onclick.do(self.on_button_pressed2)
             b3.onclick.do(self.on_button_pressed3)
             b4.onclick.do(self.on_button_pressed4)
+
             
 
             # appending a widget to another, the first argument is a string key
@@ -160,12 +190,18 @@ def mobile_com(threadname,path2,qgn,q1,q2,q3,q4,q5,size,gamefiles,hwqueue):
             for i in range (len(gamefiles)):
                 container3.append(bt[i])
             container.append(self.image_widget)
-            container.append(self.lbl_foto)
-            container.append(self.lbl_count)   
+            #container.append(self.lbl_foto)
+            #container.append(self.lbl_count)
+
+            for i in range(0, len(abt)):
+                container.append(abt[i])
+
+
             container4.append(b1)
             container4.append(b2)
             container4.append(b3)
             container4.append(b4)
+
             self.lbl2 = gui.Label('input player name: ', width='50%', height='8%',style={'font-size': '30px', 'text-align': 'left'})
             self.lbl2.style["color"]="white"
             container2.append(self.lbl2)
@@ -186,7 +222,9 @@ def mobile_com(threadname,path2,qgn,q1,q2,q3,q4,q5,size,gamefiles,hwqueue):
             return tb
             
         def on_button_pressed1(self, widget):
-            close_game(asdf)
+            global abt
+            close_game(asdf, abt)
+
             self.lbl.set_text("no game running yet")
             print("all closed")    
             
@@ -211,6 +249,8 @@ def mobile_com(threadname,path2,qgn,q1,q2,q3,q4,q5,size,gamefiles,hwqueue):
         def reset_func(self, widget):		
             print("system reset")
             hwqueue.put("off")
+
+
        
 
                 

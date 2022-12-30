@@ -32,9 +32,7 @@ def main():
             print("LEDS set to: " + str(value))
             time.sleep(1)
 
-
     arduino_reset.arduino_reset()
-
 
     path=os.path.realpath(__file__)
     path=path.replace('thread_handler.py', '')
