@@ -34,9 +34,12 @@ def close_game(asd, abt):
             time.sleep(0.5)
             asd[i].terminate()
             print(asd[i])
-    for i in range(0, len(abt)):
-        abt[i].set_text("no function")
-        abt[i].set_enabled(False)
+    try:
+        for i in range(0, len(abt)):
+            abt[i].set_text("no function")
+            abt[i].set_enabled(False)
+    except:
+        pass
 
 
   
