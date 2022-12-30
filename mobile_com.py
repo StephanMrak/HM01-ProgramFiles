@@ -17,13 +17,16 @@ def start_game(gamefile, abt):
     p.start()
     time.sleep(1)
     a=hmsysteme.get_button_names()
-    for i in range(0, len(abt)):
-        if i <len(a):
-            abt[i].set_text(a[i])
-            abt[i].set_enabled(True)
-        else:
-            abt[i].set_text("no function")
-            abt[i].set_enabled(False)
+    try:
+        for i in range(0, len(abt)):
+            if i <len(a):
+                abt[i].set_text(a[i])
+                abt[i].set_enabled(True)
+            else:
+                abt[i].set_text("no function")
+                abt[i].set_enabled(False)
+    except:
+        pass
     #time.sleep(1)
     return p
     
